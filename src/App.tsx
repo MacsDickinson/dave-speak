@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { loadTopPhrases, Phrase } from './phrases/phrasesRepository';
+import {
+  loadTopPhrases,
+  loadPhraseByParent,
+  IPhrase,
+} from './phrases/phrasesRepository';
+import Phrase from './phrases/Phrase';
 
 const App = () => {
-  const [phrases, setPhrases] = useState<Array<Phrase>>();
+  const [phrases, setPhrases] = useState<Array<IPhrase>>();
   const loadPharases = () => {
     const all = loadTopPhrases();
     setPhrases(all);
+  };
+
+  const handleClick = (parent: number) => {
+    const children = loadPhraseByParent(parent);
+    setPhrases(children);
   };
 
   const blankTemplate = () => {
@@ -29,23 +39,22 @@ const App = () => {
 
   if (!phrases) return blankTemplate();
 
-  const phraseTemplate = phrases.map((item) => {
+  const phraseList = phrases.map(({ id, phrase, parent }) => {
     return (
-      <div
-        key={item.id}
-        className="text-center bg-indigo-600 aspect-square flex rounded-lg hover:bg-indigo-900 hover:cursor-pointer"
-      >
-        <span className="text-6xl text-white font-extrabold m-auto">
-          {item.phrase}
-        </span>
-      </div>
+      <Phrase
+        key={id}
+        id={id}
+        phrase={phrase}
+        parent={parent}
+        onClick={handleClick}
+      />
     );
   });
 
   return (
     <div className="mt-6 grid grid-cols-2 gap-10">
-      {phraseTemplate}
-      {addTemplate}
+      {phraseList}
+      {/* {addTemplate} */}
     </div>
   );
 };
