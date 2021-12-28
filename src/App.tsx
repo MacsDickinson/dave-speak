@@ -9,14 +9,21 @@ import Phrase from './phrases/Phrase';
 
 const App = () => {
   const [phrases, setPhrases] = useState<Array<IPhrase>>();
-  const loadPharases = () => {
+  const [parent, setParent] = useState<number | null>();
+  const loadTopLevelPharases = () => {
     const all = loadTopPhrases();
     setPhrases(all);
+    setParent(null);
   };
 
   const handleClick = (parent: number) => {
     const children = loadPhraseByParent(parent);
     setPhrases(children);
+    setParent(parent);
+  };
+
+  const handleBackClick = () => {
+    loadTopLevelPharases();
   };
 
   const blankTemplate = () => {
@@ -34,7 +41,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    loadPharases();
+    loadTopLevelPharases();
   }, []);
 
   if (!phrases) return blankTemplate();
@@ -51,10 +58,22 @@ const App = () => {
     );
   });
 
+  const backButton = (
+    <div
+      className={`text-center bg-amber-600 flex rounded-lg hover:bg-amber-900 hover:cursor-pointer`}
+      onClick={handleBackClick}
+    >
+      <span className="text-6xl text-white font-extrabold m-auto">Home</span>
+    </div>
+  );
+
   return (
-    <div className="mt-6 grid grid-cols-2 gap-10">
-      {phraseList}
-      {/* {addTemplate} */}
+    <div>
+      <div className="mt-6 grid grid-cols-2 gap-10">
+        {parent && backButton}
+        {phraseList}
+        {/* {addTemplate} */}
+      </div>
     </div>
   );
 };
