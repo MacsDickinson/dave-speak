@@ -11,5 +11,9 @@
   { "id": 10, "phrase": "Too Hot", "parent": 6 },
   { "id": 11, "phrase": "Too Cold", "parent": 6 },
   { "id": 12, "phrase": "Question", "parent": null },
-  { "id": 13, "phrase": "Where is ...", "parent": 12 }
+  { "id": 13, "phrase": "Where is ...", "parent": 12 },
+  { "id": 14, "phrase": "Move", "parent": 6 },
+  { "id": 15, "phrase": "Chair", "parent": 14 },
+  { "id": 16, "phrase": "Bed", "parent": 14 },
+  { "id": 17, "phrase": "Commode", "parent": 14 }
 ]

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import './App.css';
 import {
   loadTopPhrases,
@@ -35,7 +36,7 @@ const App = () => {
   };
 
   const addTemplate = (
-    <div className="text-center bg-emerald-600 aspect-square flex rounded-lg hover:bg-emerald-900 hover:cursor-pointer">
+    <div className="text-center bg-emerald-600 hover:bg-emerald-900 flex rounded-lg  hover:cursor-pointer">
       <span className="text-6xl text-white font-extrabold m-auto">+</span>
     </div>
   );
@@ -58,9 +59,9 @@ const App = () => {
     );
   });
 
-  const backButton = (
+  const homeButton = (
     <div
-      className={`text-center bg-amber-600 flex rounded-lg hover:bg-amber-900 hover:cursor-pointer`}
+      className={`text-center h-64 bg-amber-600 flex rounded-lg hover:bg-amber-900 hover:cursor-pointer`}
       onClick={handleBackClick}
     >
       <span className="text-6xl text-white font-extrabold m-auto">Home</span>
@@ -70,7 +71,7 @@ const App = () => {
   return (
     <div>
       <div className="mt-6 grid grid-cols-2 gap-10">
-        {parent && backButton}
+        {parent && homeButton}
         {phraseList}
         {/* {addTemplate} */}
       </div>

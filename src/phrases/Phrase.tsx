@@ -31,16 +31,14 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
     if (children.length > 0) {
       setHasChildren(true);
     }
-  }, []);
+  }, [id]);
 
-  const colour = hasCildren ? 'emerald' : 'indigo';
+  const className = hasCildren
+    ? 'text-center bg-emerald-600 h-64 flex rounded-lg hover:bg-emerald-900 hover:cursor-pointer'
+    : 'text-center bg-indigo-600  h-64 flex rounded-lg hover:bg-indigo-900 hover:cursor-pointer';
 
   return (
-    <div
-      key={id}
-      className={`text-center bg-${colour}-600 aspect-square flex rounded-lg hover:bg-${colour}-900 hover:cursor-pointer`}
-      onClick={handleClick}
-    >
+    <div key={id} className={className} onClick={handleClick}>
       <span className="text-6xl text-white font-extrabold m-auto">
         {phrase}
       </span>
