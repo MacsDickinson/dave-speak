@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { loadPhraseByParent } from './phrasesRepository';
+import phrasesRepository from './phrasesRepository';
 
 interface PhraseProps {
   id: number;
@@ -26,7 +26,7 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   };
 
   useEffect(() => {
-    const children = loadPhraseByParent(id);
+    const children = phrasesRepository.loadPhraseByParent(id);
 
     if (children.length > 0) {
       setHasChildren(true);

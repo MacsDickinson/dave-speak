@@ -1,30 +1,54 @@
 import { useEffect, useState } from 'react';
 
 import './App.css';
-import {
-  loadTopPhrases,
-  loadPhraseByParent,
-  IPhrase,
-} from './phrases/phrasesRepository';
+import phrasesRepository, { IPhrase } from './phrases/phrasesRepository';
 import Phrase from './phrases/Phrase';
 
 const App = () => {
   const [phrases, setPhrases] = useState<Array<IPhrase>>();
-  const [parent, setParent] = useState<number | null>();
+  const [parent, setParent] = useState<number | null>(null);
+  const [adding, setAdding] = useState<boolean>(false);
+  const [newPhrase, setNewPhrase] = useState<string>('');
+
   const loadTopLevelPharases = () => {
-    const all = loadTopPhrases();
+    const all = phrasesRepository.loadTopPhrases();
     setPhrases(all);
     setParent(null);
+    blankAdd();
   };
 
-  const handleClick = (parent: number) => {
-    const children = loadPhraseByParent(parent);
+  const handlePhraseClick = (p: number) => {
+    const children = phrasesRepository.loadPhraseByParent(p);
     setPhrases(children);
-    setParent(parent);
+    setParent(p);
+    blankAdd();
   };
 
   const handleBackClick = () => {
     loadTopLevelPharases();
+    blankAdd();
+  };
+
+  const handleAddClick = () => {
+    setAdding(true);
+  };
+
+  const blankAdd = () => {
+    setNewPhrase('');
+    setAdding(false);
+  };
+
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newPhrase) {
+      phrasesRepository.addPhrase(newPhrase, parent);
+    }
+
+    blankAdd();
+
+    const children = phrasesRepository.loadPhraseByParent(parent);
+    setPhrases(children);
   };
 
   const blankTemplate = () => {
@@ -36,8 +60,29 @@ const App = () => {
   };
 
   const addTemplate = (
-    <div className="text-center bg-emerald-600 hover:bg-emerald-900 flex rounded-lg  hover:cursor-pointer">
-      <span className="text-6xl text-white font-extrabold m-auto">+</span>
+    <div
+      className="text-center bg-emerald-600 hover:bg-emerald-500 flex rounded-lg  hover:cursor-pointer"
+      onClick={handleAddClick}
+    >
+      {adding ? (
+        <form
+          className="w-full m-auto text-6xl text-center"
+          onSubmit={handleAddSubmit}
+        >
+          <input
+            autoFocus
+            value={newPhrase}
+            onChange={(e) => setNewPhrase(e.target.value)}
+            type="text"
+            className="text-6xl text-white font-extrabold m-auto bg-emerald-600 w-full text-center"
+          />
+          <button>
+            <span className="text-6xl text-white font-extrabold m-auto">+</span>
+          </button>
+        </form>
+      ) : (
+        <span className="text-6xl text-white font-extrabold m-auto">+</span>
+      )}
     </div>
   );
 
@@ -54,7 +99,7 @@ const App = () => {
         id={id}
         phrase={phrase}
         parent={parent}
-        onClick={handleClick}
+        onClick={handlePhraseClick}
       />
     );
   });
@@ -71,9 +116,9 @@ const App = () => {
   return (
     <div>
       <div className="mt-6 grid grid-cols-2 gap-10">
-        {parent && homeButton}
+        {parent !== null && homeButton}
         {phraseList}
-        {/* {addTemplate} */}
+        {addTemplate}
       </div>
     </div>
   );
