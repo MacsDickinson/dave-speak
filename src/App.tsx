@@ -17,7 +17,7 @@ const App = () => {
     blankAdd();
   };
 
-  const handlePhraseClick = (p: number) => {
+  const handlePhraseClick = (p: number | null) => {
     const children = phrasesRepository.loadPhraseByParent(p);
     setPhrases(children);
     setParent(p);

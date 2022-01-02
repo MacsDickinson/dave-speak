@@ -5,6 +5,7 @@ export interface IPhrase {
   id: number;
   phrase: string;
   parent: number | null;
+  deleted: boolean;
 }
 
 let phrases: IPhrase[];
@@ -27,7 +28,7 @@ const loadTopPhrases = (): IPhrase[] => {
 };
 
 const loadPhraseByParent = (parent: number | null): IPhrase[] => {
-  return phrases.filter((item) => item.parent === parent);
+  return phrases.filter((item) => item.parent === parent && !item.deleted);
 };
 
 const addPhrase = (text: string, parent: number | null) => {
@@ -35,9 +36,24 @@ const addPhrase = (text: string, parent: number | null) => {
     id: phrases.length,
     phrase: text,
     parent,
+    deleted: false,
   };
   phrases.push(phrase);
+  save(phrases);
+};
+
+const editPhrase = (id: number, text: string) => {
+  phrases[id].phrase = text;
+  save(phrases);
+};
+
+const save = (phrases: IPhrase[]) => {
   localStorage.setItem('phrases', JSON.stringify(phrases));
+};
+
+const deletePhrase = (id: number) => {
+  phrases[id].deleted = true;
+  save(phrases);
 };
 
 export default (() => {
@@ -47,5 +63,7 @@ export default (() => {
     loadTopPhrases,
     loadPhraseByParent,
     addPhrase,
+    editPhrase,
+    deletePhrase,
   };
 })();
