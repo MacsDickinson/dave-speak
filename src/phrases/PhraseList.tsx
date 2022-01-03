@@ -60,7 +60,7 @@ const PhraseList = () => {
 
   return (
     <div className="mt-6 grid grid-cols-2 gap-10">
-      {parent !== null && homeButton}
+      {!editMode && parent !== null && homeButton}
       {phraseList}
       {editMode && <AddPhrase parent={parent} onUpdate={handleAddUpdate} />}
     </div>

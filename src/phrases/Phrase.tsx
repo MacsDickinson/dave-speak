@@ -119,13 +119,6 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
     <div className="bg-indigo-200 col-span-2 flex text-white">
       <button
         type="button"
-        className="justify-center w-full m-3 rounded-md bg-emerald-600 hover:bg-emerald-700 font-bold"
-        onClick={() => setAddMode(true)}
-      >
-        Save
-      </button>
-      <button
-        type="button"
         className="justify-center w-full m-3 rounded-md bg-red-600 hover:bg-red-700 font-bold"
         onClick={handleDelete}
       >
