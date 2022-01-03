@@ -1,4 +1,3 @@
-import { StringMappingType } from 'typescript';
 import seed_phrases from './sample.json';
 
 export interface IPhrase {

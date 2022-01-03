@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, useContext } from 'react';
 import phrasesRepository, { IPhrase } from './phrasesRepository';
 import Phrase from './Phrase';
 import AddPhrase from './AddPhrase';
+import EditContext from '../menu/EditContext';
 
-const PhraseList = ({}) => {
+const PhraseList = () => {
+  const editMode = useContext(EditContext);
   const [phrases, setPhrases] = useState<Array<IPhrase>>();
   const [parent, setParent] = useState<number | null>(null);
 
@@ -61,7 +62,7 @@ const PhraseList = ({}) => {
     <div className="mt-6 grid grid-cols-2 gap-10">
       {parent !== null && homeButton}
       {phraseList}
-      <AddPhrase parent={parent} onUpdate={handleAddUpdate} />
+      {editMode && <AddPhrase parent={parent} onUpdate={handleAddUpdate} />}
     </div>
   );
 };

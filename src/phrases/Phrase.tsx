@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { addEmitHelper, addSyntheticTrailingComment } from 'typescript';
+import { useEffect, useState, useContext } from 'react';
 import phrasesRepository from './phrasesRepository';
+import EditContext from '../menu/EditContext';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 
 interface PhraseProps {
   id: number;
@@ -10,9 +11,10 @@ interface PhraseProps {
 }
 
 const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
+  const editMode = useContext(EditContext);
+
   const [hasCildren, setHasChildren] = useState(false);
-  const [showActionPanel, setShowActionPanel] = useState(false);
-  const [editMode, setEditMode] = useState(false);
+  const [editPhraseMode, setEditPhraseMode] = useState(false);
   const [addMode, setAddMode] = useState(false);
   const [newPhrase, setNewPhrase] = useState<string>('');
   const [_phrase, setPhrase] = useState<string>(phrase);
@@ -20,14 +22,12 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
 
   const handleClick = () => {
-    if (showActionPanel || editMode || addMode) return;
+    if (editMode || editPhraseMode || addMode) return;
 
     speak(_phrase);
 
     if (hasCildren) {
       onClick(id);
-    } else {
-      setShowActionPanel(true);
     }
   };
 
@@ -38,8 +38,7 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   };
 
   const clearEditing = () => {
-    setShowActionPanel(false);
-    setEditMode(false);
+    setEditPhraseMode(false);
     setAddMode(false);
   };
 
@@ -73,21 +72,22 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   };
 
   const addPanel = (
-    <div className="bg-emerald-600 col-span-2 flex rounded-b-lg text-white">
+    <div className="bg-indigo-200 col-span-2 flex rounded-b-lg text-white">
       <form className="w-full text-6xl" onSubmit={handleAddSubmit}>
         <input
           autoFocus
           value={newPhrase}
           onChange={(e) => setNewPhrase(e.target.value)}
           type="text"
-          className="text-4xl text-white font-bold bg-emerald-600 text-center pb-0"
+          className="text-4xl text-white font-bold bg-indigo-200 text-center pb-0"
         />
-        <button>
-          <span className="text-4xl text-white font-extrabold pl-3 pb-0">
-            +
-          </span>
+        <button className="pl-3">
+          <CheckCircleIcon className="h-5 w-5 text-emerald-600" />
         </button>
       </form>
+      <button onClick={clearEditing} className="mr-2 pt-1">
+        <XCircleIcon className="h-5 w-5 text-red-600" />
+      </button>
     </div>
   );
 
@@ -104,7 +104,9 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
         className="text-6xl text-white font-extrabold m-auto bg-emerald-600 w-full text-center"
       />
       <button>
-        <span className="text-6xl text-white font-bold m-auto">☑️</span>
+        <span className="text-6xl text-white font-bold m-auto">
+          <CheckCircleIcon className="h-10 w-10" />
+        </span>
       </button>
     </form>
   );
@@ -141,9 +143,8 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
         type="button"
         className="justify-center w-full m-3 rounded-md bg-indigo-600 hover:bg-indigo-700 font-bold"
         onClick={() => {
-          setEditMode(true);
+          setEditPhraseMode(true);
           setAddMode(false);
-          setShowActionPanel(false);
         }}
       >
         Edit
@@ -154,13 +155,6 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
         onClick={() => setAddMode(true)}
       >
         Add Child
-      </button>
-      <button
-        type="button"
-        className="justify-center w-full m-3 rounded-md bg-gray-400 hover:bg-gray-500 font-bold"
-        onClick={() => clearEditing()}
-      >
-        Cancel
       </button>
     </div>
   );
@@ -180,11 +174,11 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   return (
     <div key={id} className={className} onClick={handleClick}>
       <span className="text-6xl text-white font-extrabold m-auto col-span-2 row-span-2">
-        {editMode ? editPhraseForm : _phrase}
+        {editMode && editPhraseMode ? editPhraseForm : _phrase}
       </span>
-      {showActionPanel && actionPanel}
-      {editMode && editPanel}
-      {addMode && addPanel}
+      {editMode && !editPhraseMode && actionPanel}
+      {editMode && editPhraseMode && editPanel}
+      {editMode && addMode && addPanel}
     </div>
   );
 };
