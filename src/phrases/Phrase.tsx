@@ -72,23 +72,27 @@ const Phrase = ({ id, phrase, parent, onClick }: PhraseProps) => {
   };
 
   const addPanel = (
-    <div className="bg-indigo-200 col-span-2 flex rounded-b-lg text-white">
-      <form className="w-full text-6xl" onSubmit={handleAddSubmit}>
-        <input
-          autoFocus
-          value={newPhrase}
-          onChange={(e) => setNewPhrase(e.target.value)}
-          type="text"
-          className="text-4xl text-white font-bold bg-indigo-200 text-center pb-0"
-        />
-        <button className="pl-3">
-          <CheckCircleIcon className="h-5 w-5 text-emerald-600" />
+    <>
+      <div className="bg-indigo-200 col-span-2 flex text-white w-full">
+        <form className="w-full text-6xl" onSubmit={handleAddSubmit}>
+          <input
+            autoFocus
+            value={newPhrase}
+            onChange={(e) => setNewPhrase(e.target.value)}
+            type="text"
+            className="text-4xl text-black font-bold bg-indigo-100 text-center rounded-lg"
+          />
+        </form>
+      </div>
+      <div className="bg-indigo-200 col-span-2 grid grid-cols-4 rounded-b-lg">
+        <button className="m-auto col-start-2" onClick={handleAddSubmit}>
+          <CheckCircleIcon className="h-10 w-10 text-emerald-600" />
         </button>
-      </form>
-      <button onClick={clearEditing} className="mr-2 pt-1">
-        <XCircleIcon className="h-5 w-5 text-red-600" />
-      </button>
-    </div>
+        <button onClick={clearEditing} className="m-auto">
+          <XCircleIcon className="h-10 w-10 text-red-600" />
+        </button>
+      </div>
+    </>
   );
 
   const editPhraseForm = (
