@@ -1,26 +1,24 @@
-import { useEffect, useState, useContext } from 'react';
-import phrasesRepository, { IPhrase } from './phrasesRepository';
+import { useContext } from 'react';
+import { IPhrase } from './phrasesRepository';
 import Phrase from './Phrase';
 import AddPhrase from './AddPhrase';
 import EditContext from '../menu/EditContext';
 
-const PhraseList = () => {
-  const editMode = useContext(EditContext);
-  const [phrases, setPhrases] = useState<Array<IPhrase>>();
-  const [parent, setParent] = useState<number | null>(null);
+interface PhraseListProps {
+  parentId: number | null;
+  phrases: Array<IPhrase>;
+  onParentChange: (parentId: number | null) => void;
+}
 
-  const handlePhraseClick = (p: number | null) => {
-    const children = phrasesRepository.loadPhraseByParent(p);
-    setPhrases(children);
-    setParent(p);
-  };
+const PhraseList = ({ parentId, phrases, onParentChange }: PhraseListProps) => {
+  const editMode = useContext(EditContext);
 
   const handleAddUpdate = () => {
-    handlePhraseClick(parent);
+    onParentChange(parentId);
   };
 
   const handleBackClick = () => {
-    handlePhraseClick(null);
+    onParentChange(null);
   };
 
   const blankTemplate = () => {
@@ -31,10 +29,6 @@ const PhraseList = () => {
     );
   };
 
-  useEffect(() => {
-    handlePhraseClick(null);
-  }, []);
-
   if (!phrases) return blankTemplate();
 
   const phraseList = phrases.map(({ id, phrase, parent }) => {
@@ -44,7 +38,7 @@ const PhraseList = () => {
         id={id}
         phrase={phrase}
         parent={parent}
-        onClick={handlePhraseClick}
+        onClick={onParentChange}
       />
     );
   });
@@ -60,9 +54,8 @@ const PhraseList = () => {
 
   return (
     <div className="mt-6 grid grid-cols-2 gap-10">
-      {!editMode && parent !== null && homeButton}
       {phraseList}
-      {editMode && <AddPhrase parent={parent} onUpdate={handleAddUpdate} />}
+      {editMode && <AddPhrase parent={parentId} onUpdate={handleAddUpdate} />}
     </div>
   );
 };

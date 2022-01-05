@@ -55,6 +55,10 @@ const deletePhrase = (id: number) => {
   save(phrases);
 };
 
+const getPhrase = (id: number) => {
+  return phrases[id];
+};
+
 export default (() => {
   init();
   return {
@@ -64,5 +68,6 @@ export default (() => {
     addPhrase,
     editPhrase,
     deletePhrase,
+    getPhrase,
   };
 })();

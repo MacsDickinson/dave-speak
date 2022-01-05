@@ -20,7 +20,6 @@ const AddPhrase = ({ parent, onUpdate }: AddPhraseProps) => {
   };
 
   const handleCancelClick = () => {
-    console.log('asdasd');
     setAdding(false);
   };
 
